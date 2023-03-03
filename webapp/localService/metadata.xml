@@ -66,7 +66,7 @@
                 <Property Name="Validation_ac" Type="Edm.Boolean" sap:label="Dyn. Action Control" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="Carplanuuid" Type="Edm.Guid" Nullable="false" sap:label="Key" sap:quickinfo="UUID serving as key (parent key, root key)"/>
                 <Property Name="Carruuid" Type="Edm.Guid" sap:label="Key" sap:quickinfo="UUID serving as key (parent key, root key)"/>
-                <Property Name="Planetype" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Plane Type" sap:quickinfo="Aircraft Type"/>
+                <Property Name="Planetype" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Plane Type" sap:quickinfo="Aircraft Type" sap:value-list="standard"/>
                 <Property Name="Snumber" Type="Edm.Decimal" Precision="6" Scale="0" sap:label="Number of flights"/>
                 <Property Name="HasDraftEntity" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="Has Draft" sap:creatable="false" sap:updatable="false"/>
                 <Property Name="ActiveUUID" Type="Edm.Guid" sap:label="Key" sap:creatable="false" sap:updatable="false"/>
@@ -103,6 +103,16 @@
                 <NavigationProperty Name="DraftAdministrativeData" Relationship="ZC_AIRLINETP_CDS.assoc_CBD82E7A0B8856633E697C9FB1AD4D43" FromRole="FromRole_assoc_CBD82E7A0B8856633E697C9FB1AD4D43" ToRole="ToRole_assoc_CBD82E7A0B8856633E697C9FB1AD4D43"/>
                 <NavigationProperty Name="SiblingEntity" Relationship="ZC_AIRLINETP_CDS.assoc_87E8E3BC90985FCAE5D7F4EC665E00D3" FromRole="FromRole_assoc_87E8E3BC90985FCAE5D7F4EC665E00D3" ToRole="ToRole_assoc_87E8E3BC90985FCAE5D7F4EC665E00D3"/>
                 <NavigationProperty Name="to_AirlinePlaneTP" Relationship="ZC_AIRLINETP_CDS.assoc_76903B429A60CCF4F42A69A11A14CC1C" FromRole="FromRole_assoc_76903B429A60CCF4F42A69A11A14CC1C" ToRole="ToRole_assoc_76903B429A60CCF4F42A69A11A14CC1C"/>
+            </EntityType>
+            <EntityType Name="ZI_VH_PlaneTypeType" sap:label="Interface View SAPLANE Value Help" sap:value-list="true" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Planetype"/>
+                </Key>
+                <Property Name="Planetype" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Plane Type" sap:quickinfo="Aircraft Type"/>
+                <Property Name="Seatsmax" Type="Edm.Int32" sap:label="Max. Capacity Econ." sap:quickinfo="Maximum Capacity in Economy Class"/>
+                <Property Name="Producer" Type="Edm.String" MaxLength="5" sap:display-format="UpperCase" sap:label="Manufacturer" sap:quickinfo="Plane manufacturer"/>
+                <Property Name="SeatsmaxB" Type="Edm.Int32" sap:label="Max. Capacity Bus." sap:quickinfo="Maximum Capacity in Business Class"/>
+                <Property Name="SeatsmaxF" Type="Edm.Int32" sap:label="Max. Capacity 1st" sap:quickinfo="Maximum Capacity in First Class"/>
             </EntityType>
             <ComplexType Name="ValidationFunctionResult">
                 <Property Name="IsValid" Type="Edm.Boolean" sap:label="Is valid"/>
@@ -141,6 +151,7 @@
                 <EntitySet Name="I_DraftAdministrativeData" EntityType="ZC_AIRLINETP_CDS.I_DraftAdministrativeDataType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:addressable="false" sap:content-version="1"/>
                 <EntitySet Name="ZC_AirlinePlaneTP" EntityType="ZC_AIRLINETP_CDS.ZC_AirlinePlaneTPType" sap:content-version="1"/>
                 <EntitySet Name="ZC_AirlineTP" EntityType="ZC_AIRLINETP_CDS.ZC_AirlineTPType" sap:content-version="1"/>
+                <EntitySet Name="ZI_VH_PlaneType" EntityType="ZC_AIRLINETP_CDS.ZI_VH_PlaneTypeType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
                 <AssociationSet Name="assoc_D41A81EF29F6965B6092966F581581B1" Association="ZC_AIRLINETP_CDS.assoc_D41A81EF29F6965B6092966F581581B1" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
                     <End EntitySet="ZC_AirlinePlaneTP" Role="FromRole_assoc_D41A81EF29F6965B6092966F581581B1"/>
                     <End EntitySet="ZC_AirlinePlaneTP" Role="ToRole_assoc_D41A81EF29F6965B6092966F581581B1"/>
@@ -253,6 +264,35 @@
                             <Collection>
                                 <PropertyPath>Preparation_ac</PropertyPath>
                                 <PropertyPath>Validation_ac</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="ZC_AIRLINETP_CDS.ZC_AirlinePlaneTPType/Planetype" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.ValueList">
+                    <Record>
+                        <PropertyValue Property="Label" String="Interface View SAPLANE Value Help"/>
+                        <PropertyValue Property="CollectionPath" String="ZI_VH_PlaneType"/>
+                        <PropertyValue Property="SearchSupported" Bool="false"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="Planetype"/>
+                                    <PropertyValue Property="ValueListProperty" String="Planetype"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="Seatsmax"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="Producer"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="SeatsmaxB"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="SeatsmaxF"/>
+                                </Record>
                             </Collection>
                         </PropertyValue>
                     </Record>
